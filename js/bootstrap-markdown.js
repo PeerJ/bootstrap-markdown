@@ -16,6 +16,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * ========================================================== */
+
+var md = window.markdownit({
+  html: false,
+  breaks: false,
+  linkify: true,
+  typographer: true
+});
+
+md.use(window.markdownitSub);
+md.use(window.markdownitSup);
+md.use(window.markdownitSanitizer);
+
 (function(factory) {
   if (typeof define === "function" && define.amd) {
     //RequireJS
@@ -518,22 +530,10 @@
       return this;
     },
     parseContent: function(val) {
-      var content;
-
       // parse with supported markdown parser
       val = val || this.$textarea.val();
 
-      if (this.$options.parser) {
-        content = this.$options.parser(val);
-      } else if (typeof markdown == 'object') {
-        content = markdown.toHTML(val);
-      } else if (typeof marked == 'function') {
-        content = marked(val);
-      } else {
-        content = val;
-      }
-
-      return content;
+      return md.render(val);
     },
     showPreview: function() {
       var options = this.$options,
@@ -964,7 +964,7 @@
     width: 'inherit',
     height: 'inherit',
     resize: 'none',
-    iconlibrary: 'glyph',
+    iconlibrary: 'fa-3',
     language: 'en',
     initialstate: 'editor',
     parser: null,
